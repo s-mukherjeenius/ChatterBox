@@ -4,11 +4,11 @@ import { database } from "./firebase.js";
 import { getChatID } from "./helpers.js";
 import { getCurrentUser } from "./auth.js";
 
-export function updateTypingStatus(chatWith, isTyping) {
+export function updateTypingStatus(friendUID, isTyping) {
   const currentUserObj = getCurrentUser();
-  if (!currentUserObj || !chatWith) return;
+  if (!currentUserObj || !friendUID) return;
   const currentUID = currentUserObj.uid;
-  const chatID = getChatID(currentUID, chatWith);
+  const chatID = getChatID(currentUID, friendUID);
   const typingRef = ref(database, `typing/${chatID}/${currentUID}`);
 
   if (isTyping) {
@@ -18,11 +18,11 @@ export function updateTypingStatus(chatWith, isTyping) {
   }
 }
 
-export function listenForTypingStatus(chatWith) {
+export function listenForTypingStatus(friendUID) {
   const currentUserObj = getCurrentUser();
-  if (!currentUserObj || !chatWith) return;
+  if (!currentUserObj || !friendUID) return;
   const currentUID = currentUserObj.uid;
-  const chatID = getChatID(currentUID, chatWith);
+  const chatID = getChatID(currentUID, friendUID);
   const typingRef = ref(database, `typing/${chatID}`);
 
   onValue(typingRef, (snapshot) => {
@@ -30,7 +30,14 @@ export function listenForTypingStatus(chatWith) {
     const typingIndicator = document.getElementById("typingIndicator");
     if (typingData) {
       const otherTyping = Object.keys(typingData).find(user => user !== currentUID);
-      typingIndicator.textContent = otherTyping ? `${otherTyping} is typing...` : "";
+      if (otherTyping) {
+        // Use the friend’s username if available
+        typingIndicator.textContent = window.chatPartnerName 
+          ? `${window.chatPartnerName} is typing...` 
+          : "Someone is typing...";
+      } else {
+        typingIndicator.textContent = "";
+      }
     } else {
       typingIndicator.textContent = "";
     }

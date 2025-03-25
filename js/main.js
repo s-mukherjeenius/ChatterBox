@@ -44,10 +44,15 @@ window.sendMessage = function () {
     return;
   }
 
+  // Send the message through chat-part1.js logic
   sendMessage(message);
+  // Clear the input
   input.value = "";
-  // Pass the current chat partner's UID (assumed to be stored on window.chatWith)
-  updateTypingStatus(window.chatWith, false);
+
+  // Pass the current chat partner's UID to stop typing
+  if (window.chatWith) {
+    updateTypingStatus(window.chatWith, false);
+  }
 };
 
 window.clearChat = clearChat;
@@ -58,14 +63,19 @@ let typingTimeout;
 let isTyping = false;
 
 messageInput.addEventListener("input", () => {
-  // Ensure that window.chatWith is defined.
+  // If no friend is selected, do nothing
   if (!window.chatWith) return;
+
+  // If the user starts typing, set the typing indicator once
   if (!isTyping) {
     updateTypingStatus(window.chatWith, true);
     isTyping = true;
   }
 
+  // Clear any previous timeout
   clearTimeout(typingTimeout);
+
+  // After 2 seconds of no input, mark as not typing
   typingTimeout = setTimeout(() => {
     updateTypingStatus(window.chatWith, false);
     isTyping = false;
