@@ -1,49 +1,22 @@
 // auth.js
-import { ref, get, set, remove } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
-import { database } from "./firebase.js";
+import { auth, database } from "./firebase.js";
+import { signInWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+import { ref, remove } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 
 let currentUser = null;
 
-export async function register(username, password) {
-  if (username === "" || password === "") {
-    alert("Username and Password required!");
+export async function login(email, password) {
+  if (email === "" || password === "") {
+    alert("Email and Password required!");
     return;
   }
-  const userRef = ref(database, `users/${username}`);
   try {
-    const snapshot = await get(userRef);
-    if (snapshot.exists()) {
-      alert("Username already taken! Try logging in.");
-    } else {
-      await set(userRef, { password: password });
-      alert("Registration successful! Please log in.");
-    }
-  } catch (error) {
-    console.error("Error registering:", error);
-  }
-}
-
-export async function login(username, password) {
-  if (username === "" || password === "") {
-    alert("Username and Password required!");
-    return;
-  }
-  const userRef = ref(database, `users/${username}`);
-  try {
-    const snapshot = await get(userRef);
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-      if (userData.password === password) {
-        currentUser = username;
-        return currentUser;
-      } else {
-        alert("Incorrect password!");
-      }
-    } else {
-      alert("User does not exist! Please register.");
-    }
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    currentUser = userCredential.user;
+    return currentUser;
   } catch (error) {
     console.error("Error logging in:", error);
+    alert(error.message);
   }
 }
 
@@ -56,15 +29,16 @@ export async function deleteAccount() {
   if (!confirmDelete) return;
   
   try {
-    const userRef = ref(database, `users/${currentUser}`);
-    await remove(userRef);
+    // Delete the user from Firebase Authentication.
+    await deleteUser(currentUser);
+    // Optionally, remove user data from the Realtime Database.
+    await remove(ref(database, `users/${currentUser.uid}`));
     alert("Your account has been deleted.");
-    // Optionally remove chats associated with the user here.
     currentUser = null;
     location.reload();
   } catch (error) {
     console.error("Error deleting account:", error);
-    alert("There was an error deleting your account.");
+    alert("There was an error deleting your account: " + error.message);
   }
 }
 

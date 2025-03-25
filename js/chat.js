@@ -30,7 +30,8 @@ export function addContactToList(contactName) {
 }
 
 export function loadConversations() {
-  const currentUser = getCurrentUser();
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
   const contactsContainer = document.getElementById("contacts");
   contactsContainer.innerHTML = ""; // Clear previous list.
 
@@ -53,9 +54,9 @@ export function loadConversations() {
       let conversations = [];
       snapshot.forEach((childSnapshot) => {
         const chatID = childSnapshot.key;
-        if (chatID.includes(currentUser)) {
+        if (chatID.includes(currentUsername)) {
           const parts = chatID.split("_");
-          const friend = (parts[0] === currentUser) ? parts[1] : parts[0];
+          const friend = (parts[0] === currentUsername) ? parts[1] : parts[0];
           let lastTimestamp = 0;
           childSnapshot.forEach((msgSnap) => {
             const msg = msgSnap.val();
@@ -91,8 +92,9 @@ export function loadConversations() {
 }
 
 export async function selectChat(contactName) {
-  const currentUser = getCurrentUser();
-  if (contactName === currentUser) {
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
+  if (contactName === currentUsername) {
     alert("You cannot chat with yourself.");
     return;
   }
@@ -126,8 +128,9 @@ export function startChatWithSearchedUser() {
 }
 
 export function loadMessages() {
-  const currentUser = getCurrentUser();
-  const chatID = getChatID(currentUser, chatWith);
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
+  const chatID = getChatID(currentUsername, chatWith);
   const chatRef = ref(database, `chats/${chatID}`);
 
   // Remove any previous listener.
@@ -142,7 +145,7 @@ export function loadMessages() {
 
     const textSpan = document.createElement("span");
     textSpan.classList.add("text");
-    if (data.sender === currentUser) {
+    if (data.sender === currentUsername) {
       messageDiv.classList.add("user");
       textSpan.textContent = `You: ${data.text}`;
     } else {
@@ -162,21 +165,23 @@ export function loadMessages() {
 }
 
 export function sendMessage(message) {
-  const currentUser = getCurrentUser();
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
   if (message.trim() === "" || !chatWith) return;
 
-  const chatID = getChatID(currentUser, chatWith);
+  const chatID = getChatID(currentUsername, chatWith);
   const chatRef = ref(database, `chats/${chatID}`);
   push(chatRef, {
     text: message,
-    sender: currentUser,
+    sender: currentUsername,
     timestamp: Date.now()
   });
 }
 
 export function clearChat() {
-  const currentUser = getCurrentUser();
-  const chatID = getChatID(currentUser, chatWith);
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
+  const chatID = getChatID(currentUsername, chatWith);
   const chatRef = ref(database, `chats/${chatID}`);
 
   if (confirm("Are you sure you want to delete all messages?")) {
@@ -193,10 +198,11 @@ export function clearChat() {
 
 // Updates the typing status in Firebase for the current chat.
 export function updateTypingStatus(isTyping) {
-  const currentUser = getCurrentUser();
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
   if (!chatWith) return;
-  const chatID = getChatID(currentUser, chatWith);
-  const typingRef = ref(database, `typing/${chatID}/${currentUser}`);
+  const chatID = getChatID(currentUsername, chatWith);
+  const typingRef = ref(database, `typing/${chatID}/${currentUsername}`);
 
   if (isTyping) {
     set(typingRef, true);
@@ -207,9 +213,10 @@ export function updateTypingStatus(isTyping) {
 
 // Listens for typing status updates from the other user.
 export function listenForTypingStatus() {
-  const currentUser = getCurrentUser();
+  const currentUserObj = getCurrentUser();
+  const currentUsername = currentUserObj ? currentUserObj.displayName : "";
   if (!chatWith) return;
-  const chatID = getChatID(currentUser, chatWith);
+  const chatID = getChatID(currentUsername, chatWith);
   const typingRef = ref(database, `typing/${chatID}`);
 
   onValue(typingRef, (snapshot) => {
@@ -217,7 +224,7 @@ export function listenForTypingStatus() {
     const typingIndicator = document.getElementById("typingIndicator");
     if (typingData) {
       // For a one-on-one chat, show the indicator if any other user is typing.
-      const otherTyping = Object.keys(typingData).find(user => user !== currentUser);
+      const otherTyping = Object.keys(typingData).find(user => user !== currentUsername);
       typingIndicator.textContent = otherTyping ? `${otherTyping} is typing...` : "";
     } else {
       typingIndicator.textContent = "";

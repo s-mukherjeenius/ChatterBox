@@ -1,5 +1,4 @@
-// main.js
-import { register, login, deleteAccount, setCurrentUser } from "./auth.js";
+import { login, deleteAccount, setCurrentUser } from "./auth.js";
 import { 
   loadConversations, 
   selectChat, 
@@ -9,22 +8,24 @@ import {
   updateTypingStatus 
 } from "./chat.js";
 
-// Expose functions for use in the HTML
-window.register = async function () {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  await register(username, password);
+// Redirect to register.html when the register button is clicked.
+window.register = function () {
+  window.location.href = "register.html";
 };
 
 window.login = async function () {
-  const username = document.getElementById("username").value.trim();
+  // Using the "username" input as the email field.
+  const email = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  const user = await login(username, password);
+  
+  // Call login with email and password.
+  const user = await login(email, password);
   if (user) {
     setCurrentUser(user);
     document.getElementById("auth-section").style.display = "none";
     document.getElementById("chat-section").style.display = "block";
-    document.getElementById("currentUser").textContent = user;
+    // Display the user's display name (if available) or email.
+    document.getElementById("currentUser").textContent = user.displayName || user.email;
     loadConversations();
   }
 };
@@ -32,6 +33,7 @@ window.login = async function () {
 window.deleteAccount = deleteAccount;
 window.selectChat = selectChat;
 window.startChatWithSearchedUser = startChatWithSearchedUser;
+
 window.sendMessage = function () {
   const input = document.getElementById("messageInput");
   sendMessage(input.value);
@@ -39,6 +41,7 @@ window.sendMessage = function () {
   // Clear typing status once message is sent.
   updateTypingStatus(false);
 };
+
 window.clearChat = clearChat;
 
 // Attach typing event listener to the message input field.
