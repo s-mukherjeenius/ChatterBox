@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <br><br><br>
+  <br>
   <h2>Chatter Box</h2>
 
   <!-- Login / Register Section -->
@@ -23,7 +23,7 @@
   <div id="chat-section" style="display: none;">
     <h3>Logged in as: <span id="currentUser"></span></h3>
     <!-- Delete Account Button -->
-    <button id="delete-account" onclick="deleteAccount()">Delete Account</button>
+    
     <div id="chat-container">
       <!-- Contacts Sidebar (dynamically populated) -->
       <div id="contacts"></div>
@@ -39,8 +39,12 @@
           <button id="clear-chat" onclick="clearChat()">Clear Chat</button>
         </div>
       </div>
-    </div>
+    </div><br><br>
+    <button onclick="window.location.href='index.html'">Logout</button>
+    <button id="delete-account" onclick="deleteAccount()">Delete Account</button>
   </div>
+
+  
 
   <!-- Load main.js from the js folder -->
   <script type="module" src="./js/main.js"></script>

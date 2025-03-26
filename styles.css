@@ -233,6 +233,10 @@ body {
     margin: 0 auto; /* Centers the div horizontally */
 }
 
+  #contactSearch{
+    width: 95%;
+  }
+
 
 .register-background{
     background-color: #2a2a3a;
