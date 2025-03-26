@@ -10,16 +10,22 @@
 <body>
   <h2>Register for Chatter Box</h2>
 
-  <!-- Register Section -->
-  <div id="register-section">
-    <input type="email" id="register-email" placeholder="Enter Email" />
-    <input type="text" id="register-username" placeholder="Create Username" />
-    <input type="password" id="register-password" placeholder="Create Password" />
-    <input type="password" id="register-confirm-password" placeholder="Confirm Password" />
-    <button id="signup-button" onclick="registerUser()">Sign Up</button>
-    <!-- Back button to return to the login page -->
-    <button onclick="window.location.href='index.html'">Back to Login</button>
+  <div class="register-background">
+    <div id="register-section">
+      <input type="email" id="register-email" placeholder="Enter Email" />
+      <input type="text" id="register-username" placeholder="Create Username" />
+      <input type="password" id="register-password" placeholder="Create Password" />
+      <input type="password" id="register-confirm-password" placeholder="Confirm Password" /> <br><br>
+    </div>
+  
+    <div>
+      <button id="signup-button" onclick="registerUser()">Sign Up</button> <br>
+      <!-- Back button to return to the login page -->
+      <button class="backtologin" onclick="window.location.href='index.html'">Back to Login</button>
+    </div>
   </div>
+  <!-- Register Section -->
+  
 
   <!-- Load register.js for registration logic -->
   <script type="module" src="./js/register.js"></script>
