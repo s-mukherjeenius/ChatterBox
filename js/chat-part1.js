@@ -248,29 +248,45 @@ import {
       const chatBox = document.getElementById("chat-box");
       const messageDiv = document.createElement("div");
       messageDiv.classList.add("message");
-  
-      const textSpan = document.createElement("span");
-      textSpan.classList.add("text");
-  
-      if (data.sender === currentUID) {
-        messageDiv.classList.add("user");
-        textSpan.textContent = `You: ${data.text}`;
-      } else {
-        messageDiv.classList.add("other");
-        // Use the stored friend name
-        textSpan.textContent = `${window.chatPartnerName || data.sender}: ${data.text}`;
+      
+      // Create the bubble container
+      const bubbleDiv = document.createElement("div");
+      bubbleDiv.classList.add("bubble");
+      
+      // If it's an incoming message, show the username above the bubble.
+      if (data.sender !== currentUID) {
+        const usernameHeader = document.createElement("div");
+        usernameHeader.classList.add("username-header");
+        usernameHeader.textContent = window.chatPartnerName || data.sender;
+        bubbleDiv.appendChild(usernameHeader);
       }
-  
-      messageDiv.appendChild(textSpan);
-  
+      
+      // Create the message text element.
+      const messageTextDiv = document.createElement("div");
+      messageTextDiv.classList.add("message-text");
+      messageTextDiv.textContent = data.text;
+      bubbleDiv.appendChild(messageTextDiv);
+      
+      // Append the bubble to the message container.
+      messageDiv.appendChild(bubbleDiv);
+      
+      // Create and append the timestamp.
       const timeSpan = document.createElement("span");
       timeSpan.classList.add("timestamp");
       timeSpan.textContent = formatTimestamp(data.timestamp);
       messageDiv.appendChild(timeSpan);
-  
+      
+      // Add alignment classes.
+      if (data.sender === currentUID) {
+        messageDiv.classList.add("user");
+      } else {
+        messageDiv.classList.add("other");
+      }
+      
       chatBox.appendChild(messageDiv);
       chatBox.scrollTop = chatBox.scrollHeight;
     });
+    
   }
   
   /**

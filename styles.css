@@ -159,10 +159,12 @@ body {
     padding: 10px;
     border-radius: 7.5px;
     max-width: 50%;
+    text-align: left;
+    line-height: 20px;
     
     /* Ensures long text wraps */
     word-break: break-all; 
-    overflow-wrap: anywhere; 
+    overflow-wrap:anywhere; 
     white-space: normal;
     
     color: #000;
@@ -209,6 +211,7 @@ body {
     overflow: auto;      /* Enables scrolling if content exceeds height */
     max-height: 150px;   /* Set a maximum height (adjust as needed) */
     line-height: 1.5;
+    font-family: Arial, Helvetica, sans-serif;
   }
   
   
@@ -268,6 +271,58 @@ body {
     line-height: 1;
   }
   
+
+
+
+
+
+
+
+
+
+
+
+
+  .username-header {
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;  /* Add this line to create space */
+    color: #555;
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
   /* Responsive Styles for Mobile */
   @media (max-width: 600px) {
