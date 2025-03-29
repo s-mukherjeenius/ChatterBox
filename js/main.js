@@ -11,8 +11,8 @@ import { messaging } from "./firebase.js";
 // Import Firebase Database functions
 import { ref, set } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 import { database } from "./firebase.js";
-// Import modular Firebase Messaging functions
-import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging.js";
+// Import modular Firebase Messaging functions (getToken used below)
+import { getToken } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging.js";
 
 // Redirect to register.html when the register button is clicked.
 window.register = function () {
@@ -120,9 +120,8 @@ function initPushNotifications() {
 // Function to retrieve and store the OneSignal player ID
 function storeOneSignalPlayerId() {
   if (window.OneSignalDeferred && window.OneSignalDeferred.push) {
-    OneSignalDeferred.push(async function(OneSignal) {
-      try {
-        const playerId = await OneSignal.getUserIdAsync();
+    OneSignalDeferred.push(function(OneSignal) {
+      OneSignal.getUserId(function(playerId) {
         console.log("OneSignal Player ID:", playerId);
         const currentUser = getCurrentUser();
         if (currentUser && playerId) {
@@ -135,17 +134,9 @@ function storeOneSignalPlayerId() {
               console.error("Error storing OneSignal Player ID:", error);
             });
         }
-      } catch (error) {
-        console.error("Error retrieving OneSignal Player ID:", error);
-      }
+      });
     });
   } else {
     console.error("OneSignal is not available.");
   }
 }
-
-// Listen for foreground push notifications (using FCM)
-onMessage(messaging, (payload) => {
-  console.log('Message received in foreground:', payload);
-  // Optionally, display an in-app notification UI here.
-});
