@@ -1,7 +1,7 @@
-// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+import { getMessaging } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging.js";
 
 // Your Firebase configuration object
 const firebaseConfig = {
@@ -18,5 +18,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
+const messaging = getMessaging(app);
 
-export { app, auth, database };
+export { app, auth, database, messaging };
