@@ -8,61 +8,47 @@
     <link rel="icon" type="image/png" href="Chatterbox.png" />
     <!-- Main CSS file -->
     <link rel="stylesheet" href="styles.css" />
-
-    <!-- OneSignal SDK for Web Push Notifications -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "a925c09f-c498-48c3-bfd2-aaa8bd69cd16",
-          safari_web_id: "web.onesignal.auto.61cc1b76-79db-483e-a0b9-263210abb193",
-          notifyButton: {
-            enable: true,
-          },
-          // Allow testing on localhost; remove this option in production
-          allowLocalhostAsSecureOrigin: true
-        });
-      });
-    </script>
   </head>
-  <body>
-    <br>
-    <h2>Chatter Box</h2>
+<body>
+  <br>
+  <h2>Chatter Box</h2>
 
-    <!-- Login / Register Section -->
-    <div id="auth-section">
-      <input type="text" id="username" placeholder="Enter Email" />
-      <input type="password" id="password" placeholder="Enter Password" />
-      <button onclick="login()">Login</button>
-      <button onclick="register()">Register</button>
-    </div>
+  <!-- Login / Register Section -->
+  <div id="auth-section">
+    <input type="text" id="username" placeholder="Enter Email" />
+    <input type="password" id="password" placeholder="Enter Password" />
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+  </div>
 
-    <!-- Chat Section (hidden until user logs in) -->
-    <div id="chat-section" style="display: none;">
-      <h3>Logged in as: <span id="currentUser"></span></h3>
-      <div id="chat-container">
-        <!-- Contacts Sidebar (dynamically populated) -->
-        <div id="contacts"></div>
-        <!-- Conversation Area -->
-        <div id="conversation">
-          <div id="conversation-header">Select a contact to chat</div>
-          <div id="chat-box"></div>
-          <!-- Typing Indicator -->
-          <div id="typingIndicator" style="font-style: italic; color: gray; padding: 5px;"></div>
-          <div id="message-area">
-            <textarea id="messageInput" placeholder="Type a message..."></textarea>
-            <button onclick="sendMessage()">Send</button>
-            <button id="clear-chat" onclick="clearChat()">Clear Chat</button>
-          </div>
+  <!-- Chat Section (hidden until user logs in) -->
+  <div id="chat-section" style="display: none;">
+    <h3>Logged in as: <span id="currentUser"></span></h3>
+    <!-- Delete Account Button -->
+    
+    <div id="chat-container">
+      <!-- Contacts Sidebar (dynamically populated) -->
+      <div id="contacts"></div>
+      <!-- Conversation Area -->
+      <div id="conversation">
+        <div id="conversation-header">Select a contact to chat</div>
+        <div id="chat-box"></div>
+        <!-- Typing Indicator -->
+        <div id="typingIndicator" style="font-style: italic; color: gray; padding: 5px;"></div>
+        <div id="message-area">
+          <textarea id="messageInput" placeholder="Type a message..."></textarea>
+          <button onclick="sendMessage()">Send</button>
+          <button id="clear-chat" onclick="clearChat()">Clear Chat</button>
         </div>
       </div>
-      <br><br>
-      <button onclick="window.location.href='index.html'">Logout</button>
-      <button id="delete-account" onclick="deleteAccount()">Delete Account</button>
-    </div>
+    </div><br><br>
+    <button onclick="window.location.href='index.html'">Logout</button>
+    <button id="delete-account" onclick="deleteAccount()">Delete Account</button>
+  </div>
 
-    <!-- Load main.js from the js folder -->
-    <script type="module" src="./js/main.js"></script>
-  </body>
+  
+
+  <!-- Load main.js from the js folder -->
+  <script type="module" src="./js/main.js"></script>
+</body>
 </html>
