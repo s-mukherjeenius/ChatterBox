@@ -11,6 +11,8 @@ import { messaging } from "./firebase.js";
 // Import Firebase Database functions
 import { ref, set } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 import { database } from "./firebase.js";
+// Import modular Firebase Messaging functions
+import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging.js";
 
 // Redirect to register.html when the register button is clicked.
 window.register = function () {
@@ -33,7 +35,7 @@ window.login = async function () {
       // Initialize push notifications after a successful login
       initPushNotifications();
 
-      // Retrieve and store the OneSignal Player ID in Firebase
+      // Store OneSignal Player ID in Firebase
       storeOneSignalPlayerId();
     }
   } catch (error) {
@@ -76,7 +78,7 @@ messageInput.addEventListener("input", () => {
   // If no friend is selected, do nothing
   if (!window.chatWith) return;
 
-  // If the user starts typing, update the typing status
+  // If the user starts typing, update typing status
   if (!isTyping) {
     updateTypingStatus(window.chatWith, true);
     isTyping = true;
@@ -97,12 +99,12 @@ function initPushNotifications() {
   Notification.requestPermission().then(permission => {
     if (permission === 'granted') {
       console.log('Notification permission granted.');
-      messaging.getToken({
+      getToken(messaging, {
         vapidKey: "BBi5m2sqbe6MYgTwHJ8zTsh4snKNxBQUDd_xcRKqHHn1nRmFshaK7Nw61i35G5IXVtqm8rN4ARJG8xWav1F6Cc0"
       }).then(currentToken => {
         if (currentToken) {
           console.log('FCM Token:', currentToken);
-          // Optionally: Send the FCM token to your server if needed
+          // Optionally, send the FCM token to your server if needed.
         } else {
           console.log('No registration token available. Request permission to generate one.');
         }
@@ -117,11 +119,10 @@ function initPushNotifications() {
 
 // Function to retrieve and store the OneSignal player ID
 function storeOneSignalPlayerId() {
-  // Ensure OneSignal is loaded via the OneSignalDeferred array from your index.html
   if (window.OneSignalDeferred && window.OneSignalDeferred.push) {
     OneSignalDeferred.push(async function(OneSignal) {
       try {
-        const playerId = await OneSignal.getUserId();
+        const playerId = await OneSignal.getUserIdAsync();
         console.log("OneSignal Player ID:", playerId);
         const currentUser = getCurrentUser();
         if (currentUser && playerId) {
@@ -144,7 +145,7 @@ function storeOneSignalPlayerId() {
 }
 
 // Listen for foreground push notifications (using FCM)
-messaging.onMessage(payload => {
+onMessage(messaging, (payload) => {
   console.log('Message received in foreground:', payload);
   // Optionally, display an in-app notification UI here.
 });
